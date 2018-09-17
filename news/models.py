@@ -42,7 +42,6 @@ class Question(models.Model):
 
 class Answer(models.Model):
     text = models.TextField(verbose_name='ответ')
-    language = models.ForeignKey('main.Language', null=True, on_delete=models.SET_NULL, verbose_name='язык')
     question = models.ForeignKey(Question, on_delete=models.CASCADE, verbose_name='вопрос', related_name='answers')
     created_date = models.DateTimeField(auto_now_add=True)
 

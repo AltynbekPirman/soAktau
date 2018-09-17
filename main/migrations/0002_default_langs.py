@@ -6,8 +6,8 @@ from django.db import migrations
 
 def create_langs(apps, schema_editor):
     LANGS = [
-        {'code': 'ru', 'name': 'russian'},
-        {'code': 'kz', 'name': 'kazakh'}
+        {'code': 'rus', 'name': 'russian'},
+        {'code': 'kaz', 'name': 'kazakh'}
     ]
 
     Language = apps.get_model("main", "Language")
