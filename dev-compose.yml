@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+
+# Services
+# ------------------------------------------------------------------------------------------------------------------- #
+    aktau-nginx:
+        restart: always
+        build:
+            context: ./nginx
+            dockerfile: Dockerfile
+        env_file: .envs/.dev
+        depends_on:
+          - aktau-backend
+        volumes:
+          - static:/tmp/static
+          - media:/tmp/media:ro
+          - socket:/tmp/socket
+        ports:
+          - "178.89.12.48:8080:80"
+#          - "192.168.1.105:8081:80"
+
+    aktau-backend:
+        restart: always
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        env_file: .envs/.dev
+        volumes:
+          - socket:/src/static
+          - media:/src/media
+        command: /src/init.sh
+
+
+volumes:
+    static:
+    socket:
+    media:
