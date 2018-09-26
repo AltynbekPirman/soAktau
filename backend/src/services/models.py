@@ -43,7 +43,7 @@ class Title(models.Model):
 
 
 class Post(AbstractModel):
-    title = models.ForeignKey(Title, verbose_name='название', on_delete=models.CASCADE)
+    title = models.ForeignKey(Title, verbose_name='название', on_delete=models.CASCADE, related_name='posts')
 
     service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='posts', verbose_name='услуга')
     text = models.TextField(verbose_name="текст")
