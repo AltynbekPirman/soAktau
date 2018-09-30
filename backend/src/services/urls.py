@@ -13,6 +13,6 @@ class OptionalSlashRouter(SimpleRouter):
 router = OptionalSlashRouter()
 router.register(r'services', ServiceViewSet)
 router.register(r'posts', PostViewSet)
-router.register(r'titles/(?P<service>\w+)/(?P<sub_service>\w+)', TitleViewSet, 'posts')
+router.register(r'services/(?P<service>\w+)/(?P<sub_service>\w+)', TitleViewSet, 'posts')
 
 urlpatterns = router.urls
