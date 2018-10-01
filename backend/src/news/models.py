@@ -39,6 +39,10 @@ class Question(models.Model):
     def __str__(self):
         return self.question
 
+    class Meta:
+        verbose_name = 'вопрос'
+        verbose_name_plural = 'вопросы'
+
 
 class Answer(models.Model):
     text = models.TextField(verbose_name='ответ')
