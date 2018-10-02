@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '^kz&oq%5zf135lv0e4)9c4sz90^ohieeouctd%l086e9%7hfm-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*', '172.89.12.48']
 
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'main',
     'news',
     'services',
+    'django_summernote',
 
 ]
 
@@ -144,3 +145,6 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 STATIC_URL = '/static/'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')

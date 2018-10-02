@@ -51,7 +51,7 @@ class Post(AbstractModel):
                                     verbose_name='cуб-услуга')
 
     def __str__(self):
-        return self.title.name
+        return self.text[:150]
 
     class Meta:
         verbose_name = "Пост"
