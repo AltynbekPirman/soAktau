@@ -26,12 +26,11 @@ class ServiceAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         qs = super(ServiceAdmin, self).get_queryset(request)
-        qs = qs.order_by('language',)
         return qs
 
     formfield_overrides = {
         models.CharField: {'widget': TextInput(attrs={'rows': 3, 'cols': 130})},
-        models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 130})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 5, 'cols': 130})},
 
     }
 

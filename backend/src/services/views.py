@@ -6,8 +6,8 @@ from rest_framework.viewsets import GenericViewSet
 from django_filters import rest_framework as filters
 
 from services.models import Service, SubService, Title, Post
-from services.serializers import ServiceSerializer, ServiceDetailSerializer, SubServiceSerializer, TitleSerializer, \
-    PostTextSerializer
+from services.serializers import ServiceSerializer, SubServiceSerializer, TitleSerializer, \
+    PostTextSerializer, TitleDetailSerializer
 
 
 def get_language_filter(_model_):
@@ -32,10 +32,19 @@ class ServiceViewSet(GenericViewSet, ListModelMixin, ):
     filter_backends = (filters.DjangoFilterBackend, )
     filterset_class = ServiceFilter
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        services = ServiceSerializer(queryset, many=True)
+        kaz = [d['kaz'] for d in services.data]
+        rus = [d['rus'] for d in services.data]
+        return Response({'kaz': kaz, 'rus': rus})
+
     def retrieve(self, request, pk=None):
         queryset = SubService.objects.filter(posts__service=pk).distinct()
         sub_services = SubServiceSerializer(queryset, many=True)
-        return Response(sub_services.data)
+        kaz = [d['kaz'] for d in sub_services.data]
+        rus = [d['rus'] for d in sub_services.data]
+        return Response({'kaz': kaz, 'rus': rus})
 
 
 class TitleViewSet(GenericViewSet, ListModelMixin):
@@ -50,19 +59,35 @@ class TitleViewSet(GenericViewSet, ListModelMixin):
     def get_queryset(self, *args):
         return Title.objects.filter(posts__service=self.service, posts__sub_service=self.sub_service).distinct()
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        titles = TitleSerializer(queryset, many=True)
+        kaz = [d['kaz'] for d in titles.data]
+        rus = [d['rus'] for d in titles.data]
+        return Response({'kaz': kaz, 'rus': rus})
+
     # def retrieve(self, request, pk=None, *args, **kwargs):
     #     queryset = self.get_queryset()
     #     title = get_object_or_404(queryset, pk=pk)
     #     serializer = TitleDetailSerializer(title)
     #     return Response(serializer.data)
 
-
-class PostViewSet(GenericViewSet, ListModelMixin):
-    queryset = Post.objects.all()
-    serializer_class = PostTextSerializer
-
     def retrieve(self, request, pk=None, *args, **kwargs):
         queryset = self.get_queryset()
         title = get_object_or_404(queryset, pk=pk)
-        serializer = PostTextSerializer(title)
-        return Response(serializer.data)
+        serialized_title = TitleDetailSerializer(title)
+        kaz = [d['kaz'] for d in serialized_title.data['posts']]
+        rus = [d['rus'] for d in serialized_title.data['posts']]
+        return Response({'kaz': kaz, 'rus': rus})
+
+# class PostViewSet(GenericViewSet, ListModelMixin):
+#     queryset = Post.objects.all()
+#     serializer_class = PostTextSerializer
+#
+#     def retrieve(self, request, pk=None, *args, **kwargs):
+#         queryset = self.get_queryset()
+#         title = get_object_or_404(queryset, pk=pk)
+#         serialized_title = PostTextSerializer(title)
+#         kaz = [d['kaz'] for d in serialized_title.data]
+#         rus = [d['rus'] for d in serialized_title.data]
+#         return Response({'kaz': kaz, 'rus': rus})

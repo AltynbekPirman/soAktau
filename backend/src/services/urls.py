@@ -1,6 +1,6 @@
 from rest_framework.routers import SimpleRouter
 
-from services.views import ServiceViewSet, TitleViewSet, PostViewSet
+from services.views import ServiceViewSet, TitleViewSet
 
 
 class OptionalSlashRouter(SimpleRouter):
@@ -12,7 +12,8 @@ class OptionalSlashRouter(SimpleRouter):
 
 router = OptionalSlashRouter()
 router.register(r'services', ServiceViewSet)
-router.register(r'posts', PostViewSet)
 router.register(r'services/(?P<service>\w+)/(?P<sub_service>\w+)', TitleViewSet, 'posts')
+# router.register(r'posts', PostViewSet)
+# router.register(r'services/(?P<service>\w+)/(?P<sub_service>\w+)/(?P<title>\w+)', PostListViewSet, 'posts')
 
 urlpatterns = router.urls
