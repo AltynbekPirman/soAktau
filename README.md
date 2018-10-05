@@ -6,8 +6,11 @@ Well, here we goooooo:
 SERVICES:
 
 *GET /api/v1.00/services                                         - list of services, grouped by language 
+
 *GET /api/v1.00/services/{service_id}                            - services detail, list of sub-services for service with given id grouped by language
+
 *GET /api/v1.00/services/{service_id}/{sub_service_id}              - list of titles(sub_sub_services), for given service and sub_service ids
+
 *GET /api/v1.00/services/{service_id}/{sub_service_id}/{title_id}   - posts :)
 
 
