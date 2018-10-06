@@ -5,7 +5,18 @@ from django_summernote.widgets import SummernoteWidget
 
 from services.models import Post, SubService, Service, Title
 
-admin.site.register((Title, SubService))
+
+class SubServiceAdmin(admin.ModelAdmin):
+    fields = ('title_kaz', 'title_rus', 'order_in_list')
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        qs = qs.filter(code__isnull=True)
+        return qs
+
+
+class TitleAdmin(admin.ModelAdmin):
+    fields = ('name_kaz', 'name_rus', 'order_in_list')
 
 
 class SummernoteInlineModelAdmin(admin.options.InlineModelAdmin):
@@ -14,6 +25,8 @@ class SummernoteInlineModelAdmin(admin.options.InlineModelAdmin):
 
 class PostInline(admin.StackedInline, SummernoteInlineModelAdmin):
     model = Post
+    ordering = ('-created_date', )
+    fields = ('sub_service', 'title', 'text_kaz', 'text_rus')
     summernote_fields = ('text',)
     extra = 1
 
@@ -35,4 +48,6 @@ class ServiceAdmin(admin.ModelAdmin):
     }
 
 
+admin.site.register(Title, TitleAdmin)
+admin.site.register(SubService, SubServiceAdmin)
 admin.site.register(Service, ServiceAdmin)

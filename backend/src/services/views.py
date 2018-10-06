@@ -28,19 +28,18 @@ ServiceFilter = get_language_filter(Service)
 class ServiceViewSet(GenericViewSet, ListModelMixin, ):
     queryset = Service.objects.all()
     serializer_class = ServiceSerializer
-    ordering = ('-created_date', )
     filter_backends = (filters.DjangoFilterBackend, )
     filterset_class = ServiceFilter
 
     def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
+        queryset = self.filter_queryset(self.get_queryset().order_by('order_in_list', '-created_date'))
         services = ServiceSerializer(queryset, many=True, context={'request': request})
         kaz = [d['kaz'] for d in services.data]
         rus = [d['rus'] for d in services.data]
         return Response({'kaz': kaz, 'rus': rus})
 
     def retrieve(self, request, pk=None):
-        queryset = SubService.objects.filter(posts__service=pk).distinct()
+        queryset = SubService.objects.filter(posts__service=pk).order_by('order_in_list', '-created_date').distinct()
         sub_services = SubServiceSerializer(queryset, many=True)
         kaz = [d['kaz'] for d in sub_services.data]
         rus = [d['rus'] for d in sub_services.data]
@@ -60,7 +59,7 @@ class TitleViewSet(GenericViewSet, ListModelMixin):
         return Title.objects.filter(posts__service=self.service, posts__sub_service=self.sub_service).distinct()
 
     def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
+        queryset = self.filter_queryset(self.get_queryset().order_by('order_in_list', '-created_date'))
         titles = TitleSerializer(queryset, many=True)
         kaz = [d['kaz'] for d in titles.data]
         rus = [d['rus'] for d in titles.data]

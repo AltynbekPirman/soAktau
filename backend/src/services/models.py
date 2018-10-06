@@ -2,6 +2,9 @@ from django.db import models
 
 
 class AbstractModel(models.Model):
+    order_in_list = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='порядок')
+    created_date = models.DateTimeField(auto_now=True)
+    ordering = ('order_in_list', 'created_date')
 
     def __str__(self):
         if self.title_rus:
@@ -26,13 +29,14 @@ class Service(AbstractModel):
 class SubService(AbstractModel):
     title_kaz = models.TextField(verbose_name='название(kaz)', unique=True)
     title_rus = models.TextField(verbose_name='название(rus)', unique=True)
+    code = models.CharField(max_length=32, null=True, blank=True)
 
     class Meta:
         verbose_name = "Суб-Услуги"
         verbose_name_plural = "Суб-Услуги"
 
 
-class Title(models.Model):
+class Title(AbstractModel):
     name_kaz = models.TextField(verbose_name="название(kaz)", unique=True)
     name_rus = models.TextField(verbose_name="название(rus)", unique=True)
 

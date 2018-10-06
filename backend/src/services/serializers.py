@@ -55,7 +55,6 @@ class SubServiceSerializer(serializers.ModelSerializer):
 
 
 class TitleSerializer(serializers.ModelSerializer):
-    # posts = PostTextSerializer(many=True)
 
     kaz = serializers.SerializerMethodField('group_by_lang_kaz')
     rus = serializers.SerializerMethodField('group_by_lang_rus')
