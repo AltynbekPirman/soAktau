@@ -30,13 +30,11 @@ class ServiceSerializer(serializers.ModelSerializer):
     def get_thumbnail_url(self, obj):
         return self.context['request'].build_absolute_uri(obj.icon.url)
 
-    # @staticmethod
     def group_by_lang_kaz(self, obj):
         return {'id': obj.id, 'title': obj.title_kaz, 'icon': self.get_thumbnail_url(obj)}
 
-    @staticmethod
-    def group_by_lang_rus(obj):
-        return {'id': obj.id, 'title': obj.title_rus}
+    def group_by_lang_rus(self, obj):
+        return {'id': obj.id, 'title': obj.title_rus, 'icon': self.get_thumbnail_url(obj)}
 
 
 class SubServiceSerializer(serializers.ModelSerializer):
