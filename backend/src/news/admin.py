@@ -5,7 +5,6 @@ from django.forms import TextInput, Textarea
 from news.models import Announcement, Answer, Question
 
 admin.site.register(Announcement)
-# admin.site.register(Answer)
 
 
 class AnswerInline(admin.TabularInline):
@@ -24,7 +23,7 @@ class QuestionAdmin(admin.ModelAdmin):
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})},
 
     }
-    readonly_fields = ('question', 'language')
+    readonly_fields = ('language', )
 
 
 admin.site.register(Question, QuestionAdmin)

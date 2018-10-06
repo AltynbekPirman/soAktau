@@ -14,5 +14,5 @@ class OptionalSlashRouter(SimpleRouter):
 router = OptionalSlashRouter()
 router.register(r'news', NewsViewSet)
 router.register(r'questions/(?P<lang_code>\w+)', QuestionViewSet)
-router.register(r'announcements/(?P<lang_code>\w+)/', AnnouncementViewSet)
+router.register(r'announcements', AnnouncementViewSet)
 urlpatterns = router.urls

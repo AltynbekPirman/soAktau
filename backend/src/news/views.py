@@ -6,7 +6,7 @@ from django_filters import rest_framework as filters
 
 from main.models import Language
 from news.models import News, Announcement, Question
-from news.serializers import NewsSerializer, AnnouncementSerializer, NewsListSerializer, AnnouncementListSerializer, \
+from news.serializers import NewsSerializer, AnnouncementSerializer, NewsListSerializer, AnnouncementDetailSerializer, \
     QuestionSerializer, QuestionDetailSerializer
 
 
@@ -43,15 +43,22 @@ class NewsViewSet(GenericViewSet, ListModelMixin, ):
 
 class AnnouncementViewSet(GenericViewSet, ListModelMixin, ):
     queryset = Announcement.objects.all()
-    serializer_class = AnnouncementListSerializer
+    serializer_class = AnnouncementSerializer
     ordering = ('-created_date', )
-    filter_backends = (filters.DjangoFilterBackend, )
-    filterset_class = AnnouncementFilter
+    # filter_backends = (filters.DjangoFilterBackend, )
+    # filterset_class = AnnouncementFilter
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        titles = AnnouncementSerializer(queryset, many=True)
+        kaz = [d['kaz'] for d in titles.data]
+        rus = [d['rus'] for d in titles.data]
+        return Response({'kaz': kaz, 'rus': rus})
 
     def retrieve(self, request, pk=None):
-        queryset = Announcement.objects.all()
+        queryset = self.get_queryset()
         announcement = get_object_or_404(queryset, pk=pk)
-        serializer = AnnouncementSerializer(announcement)
+        serializer = AnnouncementDetailSerializer(announcement)
         return Response(serializer.data)
 
 

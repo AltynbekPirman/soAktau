@@ -16,8 +16,7 @@ class AbstractModel(models.Model):
 class Service(AbstractModel):
     title_kaz = models.TextField(verbose_name='название(kaz)', unique=True)
     title_rus = models.TextField(verbose_name='название(rus)', unique=True)
-    # language = models.ForeignKey('main.Language', null=True, on_delete=models.SET_NULL, verbose_name='язык')
-    # many2one sub_services
+    icon = models.ImageField(upload_to='media')
 
     class Meta:
         verbose_name = "Услуга"

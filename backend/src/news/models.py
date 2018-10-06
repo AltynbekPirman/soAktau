@@ -18,13 +18,14 @@ class News(models.Model):
 
 
 class Announcement(models.Model):
-    title = models.TextField(verbose_name='название')
-    text = models.TextField(verbose_name='текст')
-    language = models.ForeignKey('main.Language', null=True, on_delete=models.SET_NULL, verbose_name='язык')
+    title_kaz = models.TextField(verbose_name='название(kaz)')
+    title_rus = models.TextField(verbose_name='название(rus)')
+    text_kaz = models.TextField(verbose_name='текст(kaz)')
+    text_rus = models.TextField(verbose_name='текст(rus)')
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.title
+        return self.title_rus
 
     class Meta:
         verbose_name_plural = 'уведомления'

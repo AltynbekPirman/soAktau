@@ -19,17 +19,37 @@ class NewsListSerializer(serializers.ModelSerializer):
 
 
 class AnnouncementSerializer(serializers.ModelSerializer):
+    kaz = serializers.SerializerMethodField('group_by_lang_kaz')
+    rus = serializers.SerializerMethodField('group_by_lang_rus')
 
     class Meta:
         model = Announcement
-        fields = ('id', 'title', 'text', 'created_date')
+        fields = ('kaz', 'rus')
+
+    @staticmethod
+    def group_by_lang_kaz(obj):
+        return {'id': obj.id, 'title': obj.title_kaz}
+
+    @staticmethod
+    def group_by_lang_rus(obj):
+        return {'id': obj.id, 'title': obj.title_rus}
 
 
-class AnnouncementListSerializer(serializers.ModelSerializer):
+class AnnouncementDetailSerializer(serializers.ModelSerializer):
+    kaz = serializers.SerializerMethodField('group_by_lang_kaz')
+    rus = serializers.SerializerMethodField('group_by_lang_rus')
 
     class Meta:
         model = Announcement
-        fields = ('id', 'title')
+        fields = ('kaz', 'rus')
+
+    @staticmethod
+    def group_by_lang_kaz(obj):
+        return {'text': obj.text_kaz}
+
+    @staticmethod
+    def group_by_lang_rus(obj):
+        return {'text': obj.text_rus}
 
 
 class AnswerSerializer(serializers.ModelSerializer):

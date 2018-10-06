@@ -34,7 +34,7 @@ class ServiceViewSet(GenericViewSet, ListModelMixin, ):
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
-        services = ServiceSerializer(queryset, many=True)
+        services = ServiceSerializer(queryset, many=True, context={'request': request})
         kaz = [d['kaz'] for d in services.data]
         rus = [d['rus'] for d in services.data]
         return Response({'kaz': kaz, 'rus': rus})
@@ -66,12 +66,6 @@ class TitleViewSet(GenericViewSet, ListModelMixin):
         rus = [d['rus'] for d in titles.data]
         return Response({'kaz': kaz, 'rus': rus})
 
-    # def retrieve(self, request, pk=None, *args, **kwargs):
-    #     queryset = self.get_queryset()
-    #     title = get_object_or_404(queryset, pk=pk)
-    #     serializer = TitleDetailSerializer(title)
-    #     return Response(serializer.data)
-
     def retrieve(self, request, pk=None, *args, **kwargs):
         queryset = self.get_queryset()
         title = get_object_or_404(queryset, pk=pk)
@@ -79,15 +73,3 @@ class TitleViewSet(GenericViewSet, ListModelMixin):
         kaz = [d['kaz'] for d in serialized_title.data['posts']]
         rus = [d['rus'] for d in serialized_title.data['posts']]
         return Response({'kaz': kaz, 'rus': rus})
-
-# class PostViewSet(GenericViewSet, ListModelMixin):
-#     queryset = Post.objects.all()
-#     serializer_class = PostTextSerializer
-#
-#     def retrieve(self, request, pk=None, *args, **kwargs):
-#         queryset = self.get_queryset()
-#         title = get_object_or_404(queryset, pk=pk)
-#         serialized_title = PostTextSerializer(title)
-#         kaz = [d['kaz'] for d in serialized_title.data]
-#         rus = [d['rus'] for d in serialized_title.data]
-#         return Response({'kaz': kaz, 'rus': rus})
