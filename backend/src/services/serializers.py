@@ -45,13 +45,11 @@ class SubServiceSerializer(serializers.ModelSerializer):
         model = SubService
         fields = ('kaz', 'rus')
 
-    @staticmethod
-    def group_by_lang_kaz(obj):
-        return {'id': obj.id, 'title': obj.title_kaz}
+    def group_by_lang_kaz(self, obj):
+        return {'id': obj.id, 'title': obj.title_kaz, 'serviceId': self.context.get('service_id')}
 
-    @staticmethod
-    def group_by_lang_rus(obj):
-        return {'id': obj.id, 'title': obj.title_rus}
+    def group_by_lang_rus(self, obj):
+        return {'id': obj.id, 'title': obj.title_rus, 'serviceId': self.context.get('service_id')}
 
 
 class TitleSerializer(serializers.ModelSerializer):
@@ -63,13 +61,13 @@ class TitleSerializer(serializers.ModelSerializer):
         model = Title
         fields = ('kaz', 'rus')
 
-    @staticmethod
-    def group_by_lang_kaz(obj):
-        return {'id': obj.id, 'title': obj.name_kaz}
+    def group_by_lang_kaz(self, obj):
+        return {'id': obj.id, 'title': obj.name_kaz,
+                'serviceId': self.context.get('service_id'), 'subServiceId': self.context.get('sub_service_id')}
 
-    @staticmethod
-    def group_by_lang_rus(obj):
-        return {'id': obj.id, 'title': obj.name_rus}
+    def group_by_lang_rus(self, obj):
+        return {'id': obj.id, 'title': obj.name_rus,
+                'serviceId': self.context.get('service_id'), 'subServiceId': self.context.get('sub_service_id')}
 
 
 class TitleDetailSerializer(serializers.ModelSerializer):

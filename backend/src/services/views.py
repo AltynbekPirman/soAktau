@@ -40,7 +40,7 @@ class ServiceViewSet(GenericViewSet, ListModelMixin, ):
 
     def retrieve(self, request, pk=None):
         queryset = SubService.objects.filter(posts__service=pk).order_by('order_in_list', '-created_date').distinct()
-        sub_services = SubServiceSerializer(queryset, many=True)
+        sub_services = SubServiceSerializer(queryset, many=True, context={'service_id': pk})
         kaz = [d['kaz'] for d in sub_services.data]
         rus = [d['rus'] for d in sub_services.data]
         return Response({'kaz': kaz, 'rus': rus})
@@ -60,15 +60,10 @@ class TitleViewSet(GenericViewSet, ListModelMixin):
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset().order_by('order_in_list', '-created_date'))
-        titles = TitleSerializer(queryset, many=True)
-        kaz = []; rus = []
-        for d in titles.data:
-            d['kaz']['service_id'] = self.service
-            d['kaz']['sub_service_id'] = self.sub_service
-            d['rus']['service_id'] = self.service
-            d['rus']['sub_service_id'] = self.sub_service
-            kaz.append(d['kaz'])
-            rus.append(d['rus'])
+        titles = TitleSerializer(queryset, many=True,
+                                 context={'service_id': self.service, 'sub_service_id': self.sub_service})
+        kaz = [d['kaz'] for d in titles.data]
+        rus = [d['rus'] for d in titles.data]
         return Response({'kaz': kaz, 'rus': rus})
 
     def retrieve(self, request, pk=None, *args, **kwargs):
