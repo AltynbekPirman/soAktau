@@ -22,7 +22,7 @@ class Command(BaseCommand):
         try:
             dummy_title = Title.objects.get(
                 name_rus__icontains='Об услуге')
-        except Service.DoesNotExist:
+        except Title.DoesNotExist:
             dummy_title = Title.objects.create(
                 name_rus='Об услуге',
                 name_kaz='Қызмет жайында',
@@ -30,7 +30,7 @@ class Command(BaseCommand):
 
         try:
             calc_sub_service = SubService.objects.get(code='calc')
-        except Title.DoesNotExist:
+        except SubService.DoesNotExist:
             calc_sub_service = SubService.objects.create(
                 title_rus='calculator',
                 title_kaz='calculator',
