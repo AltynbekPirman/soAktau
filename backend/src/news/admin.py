@@ -1,29 +1,8 @@
 from django.contrib import admin
 from django.db import models
-from django.forms import TextInput, Textarea
 
-from news.models import Announcement, Answer, Question
+from news.models import Announcement, Question
 
+
+admin.site.register(Question)
 admin.site.register(Announcement)
-
-
-class AnswerInline(admin.TabularInline):
-    model = Answer
-    extra = 0
-
-
-class QuestionAdmin(admin.ModelAdmin):
-
-    inlines = [
-        AnswerInline,
-    ]
-
-    formfield_overrides = {
-        models.CharField: {'widget': TextInput(attrs={'rows': 3, 'cols': 60})},
-        models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})},
-
-    }
-    readonly_fields = ('language', )
-
-
-admin.site.register(Question, QuestionAdmin)

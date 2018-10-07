@@ -33,26 +33,15 @@ class Announcement(models.Model):
 
 
 class Question(models.Model):
-    question = models.TextField(verbose_name='вопрос')
+    question_kaz = models.TextField(verbose_name='вопрос(kaz)')
+    question_rus = models.TextField(verbose_name='вопрос(rus)')
+    answer_kaz = models.TextField(verbose_name='ответ(kaz)')
+    answer_rus = models.TextField(verbose_name='ответ(rus)')
     created_date = models.DateTimeField(auto_now_add=True)
-    language = models.ForeignKey('main.Language', null=True, on_delete=models.SET_NULL, verbose_name='язык')
 
     def __str__(self):
-        return self.question
+        return self.question_rus
 
     class Meta:
         verbose_name = 'вопрос'
         verbose_name_plural = 'вопросы'
-
-
-class Answer(models.Model):
-    text = models.TextField(verbose_name='ответ')
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, verbose_name='вопрос', related_name='answers')
-    created_date = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.text
-
-    class Meta:
-        verbose_name = 'ответ'
-        verbose_name_plural = 'ответы'

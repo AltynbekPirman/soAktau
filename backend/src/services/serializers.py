@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from services.models import Service, Post, SubService, Title
+from services.models import Service, Post, SubService, Title, CalcParameter, CalcQuestion
 
 
 class PostTextSerializer(serializers.ModelSerializer):
@@ -76,3 +76,28 @@ class TitleDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Title
         fields = ('posts',)
+
+
+class CalcParameterSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CalcParameter
+        fields = ('name', 'value')
+
+
+class CalcQuestionSerializer(serializers.ModelSerializer):
+
+    kaz = serializers.SerializerMethodField('group_by_lang_kaz')
+    rus = serializers.SerializerMethodField('group_by_lang_rus')
+
+    class Meta:
+        model = CalcQuestion
+        fields = ('kaz', 'rus')
+
+    @staticmethod
+    def group_by_lang_kaz(obj):
+        return {'id': obj.id, 'question': obj.question_kaz, 'answer': obj.answer_kaz}
+
+    @staticmethod
+    def group_by_lang_rus(obj):
+        return {'id': obj.id, 'question': obj.question_rus, 'answer': obj.answer_rus}

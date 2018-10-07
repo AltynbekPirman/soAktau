@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from main.serializers import LanguageSerializer
-from news.models import News, Announcement, Question, Answer
+from news.models import News, Announcement, Question
 
 
 class NewsSerializer(serializers.ModelSerializer):
@@ -50,21 +50,6 @@ class AnnouncementDetailSerializer(serializers.ModelSerializer):
     @staticmethod
     def group_by_lang_rus(obj):
         return {'text': obj.text_rus}
-
-
-class AnswerSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Answer
-        fields = ('text', 'created_date')
-
-
-class QuestionDetailSerializer(serializers.ModelSerializer):
-    answers = AnswerSerializer(many=True, allow_null=True)
-
-    class Meta:
-        model = Question
-        fields = ('question', 'created_date', 'answers', 'language')
 
 
 class QuestionSerializer(serializers.ModelSerializer):

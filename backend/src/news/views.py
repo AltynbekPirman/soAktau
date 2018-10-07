@@ -7,7 +7,7 @@ from django_filters import rest_framework as filters
 from main.models import Language
 from news.models import News, Announcement, Question
 from news.serializers import NewsSerializer, AnnouncementSerializer, NewsListSerializer, AnnouncementDetailSerializer, \
-    QuestionSerializer, QuestionDetailSerializer
+    QuestionSerializer
 
 
 def get_language_filter(_model_):
@@ -79,11 +79,11 @@ class QuestionViewSet(GenericViewSet, ListModelMixin, CreateModelMixin,):
         serializer = QuestionSerializer(queryset, many=True)
         return Response(serializer.data)
 
-    def retrieve(self, request, pk=None, lang_code=None):
-        queryset = Question.objects.filter(language=self.lang)
-        question = get_object_or_404(queryset, pk=pk)
-        serializer = QuestionDetailSerializer(question)
-        return Response(serializer.data)
+    # def retrieve(self, request, pk=None, lang_code=None):
+    #     queryset = Question.objects.filter(language=self.lang)
+    #     question = get_object_or_404(queryset, pk=pk)
+    #     serializer = QuestionDetailSerializer(question)
+    #     return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
         lang = Language.objects.get(code=self.kwargs.get('lang_code'))

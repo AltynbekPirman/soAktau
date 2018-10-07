@@ -5,9 +5,9 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from django_filters import rest_framework as filters
 
-from services.models import Service, SubService, Title, Post
+from services.models import Service, SubService, Title, Post, CalcParameter, CalcQuestion
 from services.serializers import ServiceSerializer, SubServiceSerializer, TitleSerializer, \
-    PostTextSerializer, TitleDetailSerializer
+    PostTextSerializer, TitleDetailSerializer, CalcParameterSerializer, CalcQuestionSerializer
 
 
 def get_language_filter(_model_):
@@ -62,6 +62,10 @@ class TitleViewSet(GenericViewSet, ListModelMixin):
         queryset = self.filter_queryset(self.get_queryset().order_by('order_in_list', '-created_date'))
         titles = TitleSerializer(queryset, many=True,
                                  context={'service_id': self.service, 'sub_service_id': self.sub_service})
+
+        if SubService.objects.get(id=self.sub_service).code == 'calc':
+            return Response({'calc': True, 'serviceId': self.service, 'subServiceId': self.sub_service})
+
         kaz = [d['kaz'] for d in titles.data]
         rus = [d['rus'] for d in titles.data]
         return Response({'kaz': kaz, 'rus': rus})
@@ -73,3 +77,28 @@ class TitleViewSet(GenericViewSet, ListModelMixin):
         kaz = [d['kaz'] for d in serialized_title.data['posts']]
         rus = [d['rus'] for d in serialized_title.data['posts']]
         return Response({'kaz': kaz, 'rus': rus})
+
+
+class CalcParameterViewSet(GenericViewSet, ListModelMixin):
+    queryset = CalcParameter.objects.all()
+    serializer_class = CalcParameterSerializer
+
+
+class CalcQuestionViewSet(GenericViewSet, ListModelMixin, ):
+    queryset = CalcQuestion.objects.all()
+    serializer_class = CalcQuestionSerializer
+    filter_backends = (filters.DjangoFilterBackend, )
+    filterset_class = ServiceFilter
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        services = CalcQuestionSerializer(queryset, many=True)
+        kaz = [d['kaz'] for d in services.data]
+        rus = [d['rus'] for d in services.data]
+        return Response({'kaz': kaz, 'rus': rus})
+
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        queryset = self.get_queryset()
+        question = get_object_or_404(queryset, pk=pk)
+        question = CalcQuestionSerializer(question)
+        return Response(question.data)
