@@ -5,17 +5,21 @@ from news.models import News, Announcement, Question
 
 
 class NewsSerializer(serializers.ModelSerializer):
+    kaz = serializers.SerializerMethodField('group_by_lang_kaz')
+    rus = serializers.SerializerMethodField('group_by_lang_rus')
 
     class Meta:
         model = News
-        fields = ('id', 'title', 'text', 'created_date', 'photo_url')
+        fields = ('kaz', 'rus')
 
+    def get_thumbnail_url(self, obj):
+        return self.context['request'].build_absolute_uri(obj.icon.url)
 
-class NewsListSerializer(serializers.ModelSerializer):
+    def group_by_lang_kaz(self, obj):
+        return {'id': obj.id, 'title': obj.title_kaz, 'text': obj.text_kaz, 'icon': self.get_thumbnail_url(obj)}
 
-    class Meta:
-        model = News
-        fields = ('id', 'title', 'photo_url')
+    def group_by_lang_rus(self, obj):
+        return {'id': obj.id, 'title': obj.title_rus, 'text': obj.text_rus, 'icon': self.get_thumbnail_url(obj)}
 
 
 class AnnouncementSerializer(serializers.ModelSerializer):
@@ -26,36 +30,28 @@ class AnnouncementSerializer(serializers.ModelSerializer):
         model = Announcement
         fields = ('kaz', 'rus')
 
-    @staticmethod
-    def group_by_lang_kaz(obj):
-        return {'id': obj.id, 'title': obj.title_kaz}
+    def get_thumbnail_url(self, obj):
+        return self.context['request'].build_absolute_uri(obj.icon.url)
 
-    @staticmethod
-    def group_by_lang_rus(obj):
-        return {'id': obj.id, 'title': obj.title_rus}
+    def group_by_lang_kaz(self, obj):
+        return {'id': obj.id, 'title': obj.title_kaz, 'text': obj.text_kaz, 'icon': self.get_thumbnail_url(obj)}
+
+    def group_by_lang_rus(self, obj):
+        return {'id': obj.id, 'title': obj.title_rus,  'text': obj.text_rus, 'icon': self.get_thumbnail_url(obj)}
 
 
-class AnnouncementDetailSerializer(serializers.ModelSerializer):
+class QuestionSerializer(serializers.ModelSerializer):
     kaz = serializers.SerializerMethodField('group_by_lang_kaz')
     rus = serializers.SerializerMethodField('group_by_lang_rus')
 
     class Meta:
-        model = Announcement
+        model = Question
         fields = ('kaz', 'rus')
 
     @staticmethod
     def group_by_lang_kaz(obj):
-        return {'text': obj.text_kaz}
+        return {'id': obj.id, 'question': obj.question_kaz, 'answer': obj.answer_kaz}
 
     @staticmethod
     def group_by_lang_rus(obj):
-        return {'text': obj.text_rus}
-
-
-class QuestionSerializer(serializers.ModelSerializer):
-    language = LanguageSerializer()
-
-    class Meta:
-        model = Question
-        fields = ('id', 'question', 'created_date', 'language')
-
+        return {'id': obj.id, 'question': obj.question_rus, 'answer': obj.answer_rus}

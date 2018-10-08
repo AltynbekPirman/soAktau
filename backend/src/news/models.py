@@ -2,15 +2,15 @@ from django.db import models
 
 
 class News(models.Model):
-
-    title = models.TextField(verbose_name='название')
-    text = models.TextField(verbose_name='текст')
-    language = models.ForeignKey('main.Language', null=True, on_delete=models.SET_NULL, verbose_name='язык')
+    icon = models.ImageField(upload_to='news_images')
+    title_kaz = models.TextField(verbose_name='название(kaz)')
+    title_rus = models.TextField(verbose_name='название(rus)')
+    text_kaz = models.TextField(verbose_name='текст(kaz)')
+    text_rus = models.TextField(verbose_name='текст(rus)')
     created_date = models.DateTimeField(auto_now_add=True)
-    photo_url = models.TextField(null=True, verbose_name='фото')
 
     def __str__(self):
-        return self.title
+        return self.title_rus
 
     class Meta:
         verbose_name_plural = 'новости'
@@ -18,6 +18,7 @@ class News(models.Model):
 
 
 class Announcement(models.Model):
+    icon = models.ImageField(upload_to='notif_images')
     title_kaz = models.TextField(verbose_name='название(kaz)')
     title_rus = models.TextField(verbose_name='название(rus)')
     text_kaz = models.TextField(verbose_name='текст(kaz)')
