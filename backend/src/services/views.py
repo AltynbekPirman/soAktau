@@ -71,11 +71,10 @@ class TitleViewSet(GenericViewSet, ListModelMixin):
         return Response({'kaz': kaz, 'rus': rus})
 
     def retrieve(self, request, pk=None, *args, **kwargs):
-        queryset = self.get_queryset()
-        title = get_object_or_404(queryset, pk=pk)
-        serialized_title = TitleDetailSerializer(title)
-        kaz = [d['kaz'] for d in serialized_title.data['posts']]
-        rus = [d['rus'] for d in serialized_title.data['posts']]
+        queryset = Post.objects.filter(service_id=self.service, sub_service_id=self.sub_service, title_id=pk)
+        serialized_title = PostTextSerializer(queryset, many=True)
+        kaz = [d['kaz'] for d in serialized_title.data]
+        rus = [d['rus'] for d in serialized_title.data]
         return Response({'kaz': kaz, 'rus': rus})
 
 
