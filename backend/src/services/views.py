@@ -63,8 +63,8 @@ class TitleViewSet(GenericViewSet, ListModelMixin):
         titles = TitleSerializer(queryset, many=True,
                                  context={'service_id': self.service, 'sub_service_id': self.sub_service})
 
-        if SubService.objects.get(id=self.sub_service).code == 'calc':
-            return Response({'calc': True, 'serviceId': self.service, 'subServiceId': self.sub_service})
+        # if SubService.objects.get(id=self.sub_service).code == 'calc':
+        #     return Response({'calc': True, 'serviceId': self.service, 'subServiceId': self.sub_service})
 
         kaz = [d['kaz'] for d in titles.data]
         rus = [d['rus'] for d in titles.data]

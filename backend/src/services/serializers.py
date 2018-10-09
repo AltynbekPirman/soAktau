@@ -46,10 +46,16 @@ class SubServiceSerializer(serializers.ModelSerializer):
         fields = ('kaz', 'rus')
 
     def group_by_lang_kaz(self, obj):
-        return {'id': obj.id, 'title': obj.title_kaz, 'serviceId': self.context.get('service_id')}
+        return {
+            'id': obj.id, 'title': obj.title_kaz, 'is_calc': obj.code == 'calc',
+            'serviceId': self.context.get('service_id')
+        }
 
     def group_by_lang_rus(self, obj):
-        return {'id': obj.id, 'title': obj.title_rus, 'serviceId': self.context.get('service_id')}
+        return {
+            'id': obj.id, 'title': obj.title_rus, 'is_calc': obj.code == 'calc',
+            'serviceId': self.context.get('service_id')
+        }
 
 
 class TitleSerializer(serializers.ModelSerializer):
