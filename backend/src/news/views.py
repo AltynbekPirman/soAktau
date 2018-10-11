@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from django_filters import rest_framework as filters
 
-from main.models import Language
 from news.models import News, Announcement, Question
 from news.serializers import NewsSerializer, AnnouncementSerializer, QuestionSerializer
 

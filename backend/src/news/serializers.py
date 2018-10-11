@@ -1,6 +1,5 @@
 from rest_framework import serializers
 
-from main.serializers import LanguageSerializer
 from news.models import News, Announcement, Question
 
 

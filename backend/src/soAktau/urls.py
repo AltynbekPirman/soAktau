@@ -21,6 +21,7 @@ from django.urls import path, include
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
+    path('api/v1.00/', include('main.urls')),
     path('api/v1.00/', include('news.urls')),
     path('api/v1.00/', include('services.urls')),
     path('summernote/', include('django_summernote.urls'))
