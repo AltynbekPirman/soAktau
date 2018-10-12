@@ -15,10 +15,16 @@ class NewsSerializer(serializers.ModelSerializer):
         return self.context['request'].build_absolute_uri(obj.icon.url)
 
     def group_by_lang_kaz(self, obj):
-        return {'id': obj.id, 'title': obj.title_kaz, 'text': obj.text_kaz, 'icon': self.get_thumbnail_url(obj)}
+        return {
+            'id': obj.id, 'title': obj.title_kaz, 'text': obj.text_kaz,
+            'icon': self.get_thumbnail_url(obj), 'createdAt': obj.created_date
+        }
 
     def group_by_lang_rus(self, obj):
-        return {'id': obj.id, 'title': obj.title_rus, 'text': obj.text_rus, 'icon': self.get_thumbnail_url(obj)}
+        return {
+            'id': obj.id, 'title': obj.title_rus, 'text': obj.text_rus,
+            'icon': self.get_thumbnail_url(obj), 'createdAt': obj.created_date
+        }
 
 
 class AnnouncementSerializer(serializers.ModelSerializer):
@@ -33,10 +39,16 @@ class AnnouncementSerializer(serializers.ModelSerializer):
         return self.context['request'].build_absolute_uri(obj.icon.url)
 
     def group_by_lang_kaz(self, obj):
-        return {'id': obj.id, 'title': obj.title_kaz, 'text': obj.text_kaz, 'icon': self.get_thumbnail_url(obj)}
+        return {
+            'id': obj.id, 'title': obj.title_kaz, 'text': obj.text_kaz,
+            'icon': self.get_thumbnail_url(obj), 'createdAt': obj.created_date
+        }
 
     def group_by_lang_rus(self, obj):
-        return {'id': obj.id, 'title': obj.title_rus,  'text': obj.text_rus, 'icon': self.get_thumbnail_url(obj)}
+        return {
+            'id': obj.id, 'title': obj.title_rus,  'text': obj.text_rus,
+            'icon': self.get_thumbnail_url(obj), 'createdAt': obj.created_date
+        }
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -49,8 +61,8 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def group_by_lang_kaz(obj):
-        return {'id': obj.id, 'question': obj.question_kaz, 'answer': obj.answer_kaz}
+        return {'id': obj.id, 'question': obj.question_kaz, 'answer': obj.answer_kaz, 'createdAt': obj.created_date}
 
     @staticmethod
     def group_by_lang_rus(obj):
-        return {'id': obj.id, 'question': obj.question_rus, 'answer': obj.answer_rus}
+        return {'id': obj.id, 'question': obj.question_rus, 'answer': obj.answer_rus, 'createdAt': obj.created_date}

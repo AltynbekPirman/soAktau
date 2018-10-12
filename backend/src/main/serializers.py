@@ -30,32 +30,47 @@ class AddressSerializer(serializers.ModelSerializer):
 
     def group_by_lang_kaz(self, obj):
         return {
-            'id': obj.id, 'email': obj.email, 'buses': obj.buses,
-            'address': obj.address_kaz, 'coordinates': self.get_coordinates(obj),
-            'phones': self.get_phones(obj)
+            'emails': self.get_mails(obj), 'busStops': self.get_buses(obj),
+            'addresses': self.get_kaz_info(obj), 'markers': self.get_coordinates(obj),
+            'tels': self.get_phones(obj)
         }
 
     def group_by_lang_rus(self, obj):
         return {
-            'id': obj.id, 'email': obj.email, 'buses': obj.buses,
-            'address': obj.address_rus, 'coordinates': self.get_coordinates(obj),
-            'phones': self.get_phones(obj)
+            'emails': self.get_mails(obj), 'busStops': self.get_buses(obj),
+            'addresses': self.get_rus_info(obj), 'markers': self.get_coordinates(obj),
+            'tels': self.get_phones(obj)
         }
 
     @staticmethod
     def get_coordinates(obj):
         coordinates = obj.coordinates.all()
-        return {
-            'latitude': [coordinate.latitude for coordinate in coordinates],
-            'longitude': [coordinate.longitude for coordinate in coordinates]
-        }
+        return [{'lat': coordinate.latitude, 'lon': coordinate.longitude} for coordinate in coordinates]
 
     @staticmethod
     def get_phones(obj):
         phones = obj.phones.all()
-        return {
-            'phones': [phone.telephone for phone in phones],
-        }
+        return [phone.telephone for phone in phones]
+
+    @staticmethod
+    def get_mails(obj):
+        emails = obj.emails.all()
+        return [email.email for email in emails]
+
+    @staticmethod
+    def get_buses(obj):
+        buses = obj.buses.all()
+        return [bus.bus_num for bus in buses]
+
+    @staticmethod
+    def get_rus_info(obj):
+        addresses = obj.addresses.all()
+        return [address.text_rus for address in addresses]
+
+    @staticmethod
+    def get_kaz_info(obj):
+        addresses = obj.addresses.all()
+        return [address.text_kaz for address in addresses]
 
 
 class ChatSerializer(serializers.ModelSerializer):
@@ -75,13 +90,9 @@ class ChatSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_kaz_messages(obj):
         messages = obj.messages.all()
-        return {
-            'messages': [message.message_kaz for message in messages],
-        }
+        return [{'_id': message.id, 'text': message.message_kaz} for message in messages]
 
     @staticmethod
     def get_rus_messages(obj):
         messages = obj.messages.all()
-        return {
-            'messages': [message.message_rus for message in messages],
-        }
+        return [{'_id': message.id, 'text': message.message_rus} for message in messages]

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import User, Group
 
-from main.models import Phone, Address, CompanyInfo, Coordinate, ChatRoom, ChatMessage
+from main.models import Phone, Address, CompanyInfo, Coordinate, ChatRoom, ChatMessage, Bus, Mail, AddressInfo
 
 admin.site.unregister((User, Group))
 
@@ -23,13 +23,28 @@ class CoordinateInline(admin.StackedInline):
     extra = 1
 
 
+class BusInline(admin.StackedInline):
+    model = Bus
+    extra = 1
+
+
+class MailInline(admin.StackedInline):
+    model = Mail
+    extra = 1
+
+
+class AddressInfoInline(admin.StackedInline):
+    model = AddressInfo
+    extra = 1
+
+
 class ChatMessageInline(admin.StackedInline):
     model = ChatMessage
     extra = 1
 
 
 class AddressAdmin(admin.ModelAdmin):
-    inlines = [PhoneInline, CoordinateInline]
+    inlines = [AddressInfoInline, MailInline, PhoneInline, CoordinateInline, BusInline]
 
 
 class ChatRoomAdmin(admin.ModelAdmin):

@@ -22,17 +22,50 @@ class CompanyInfo(models.Model):
 
 
 class Address(models.Model):
+
+    class Meta:
+        verbose_name_plural = 'адрес'
+        verbose_name = 'адрес'
+
+
+class Bus(models.Model):
+    bus_num = models.CharField(max_length=8, verbose_name='автобус')
+    address = models.ForeignKey(Address, related_name='buses', null=True,
+                                verbose_name='адрес', on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return self.bus_num
+
+    class Meta:
+        verbose_name_plural = 'автобусы'
+        verbose_name = 'автобус'
+
+
+class AddressInfo(models.Model):
+    text_kaz = models.CharField(max_length=256, verbose_name='адрес(kaz)')
+    text_rus = models.CharField(max_length=256, verbose_name='адрес(rus)')
+    address = models.ForeignKey(Address, related_name='addresses', null=True,
+                                verbose_name='адрес', on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return self.text_rus
+
+    class Meta:
+        verbose_name_plural = 'адрес'
+        verbose_name = 'адрес'
+
+
+class Mail(models.Model):
     email = models.EmailField()
-    buses = models.CharField(max_length=256, verbose_name='автобусы')
-    address_kaz = models.CharField(max_length=256, verbose_name='адрес(kaz)')
-    address_rus = models.CharField(max_length=256, verbose_name='адрес(rus)')
+    address = models.ForeignKey(Address, related_name='emails', null=True,
+                                verbose_name='email', on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.email
 
     class Meta:
-        verbose_name_plural = 'адрес'
-        verbose_name = 'адрес'
+        verbose_name_plural = 'email'
+        verbose_name = 'email'
 
 
 class Coordinate(models.Model):
@@ -46,7 +79,7 @@ class Coordinate(models.Model):
 
     class Meta:
         verbose_name_plural = 'координаты'
-        verbose_name = 'координаты'
+        verbose_name = 'координата'
 
 
 class Phone(models.Model):

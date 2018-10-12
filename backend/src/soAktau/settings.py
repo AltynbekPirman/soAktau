@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'main',
     'news',
     'services',
+    'my_city',
     'django_summernote',
 
 ]
