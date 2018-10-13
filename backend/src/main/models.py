@@ -90,21 +90,21 @@ class Phone(models.Model):
     def __str__(self):
         return self.telephone
 
-    @staticmethod
-    def _extract_number(phone: str) -> str:
-        res = ''
-        for char in phone:
-            if char.isdigit():
-                res += char
-        return res
-
-    def _add_href_to_phone(self) -> None:
-        tel_num = self._extract_number(self.telephone)
-        self.telephone = '<a href="tel:{tel_num}">{tel}</a>'.format(tel_num=tel_num, tel=self.telephone)
-
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        self._add_href_to_phone()
-        super().save()
+    # @staticmethod
+    # def _extract_number(phone: str) -> str:
+    #     res = ''
+    #     for char in phone:
+    #         if char.isdigit():
+    #             res += char
+    #     return res
+    #
+    # def _add_href_to_phone(self) -> None:
+    #     tel_num = self._extract_number(self.telephone)
+    #     self.telephone = '<a href="tel:{tel_num}">{tel}</a>'.format(tel_num=tel_num, tel=self.telephone)
+    #
+    # def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+    #     self._add_href_to_phone()
+    #     super().save()
 
     class Meta:
         verbose_name_plural = 'телефон'

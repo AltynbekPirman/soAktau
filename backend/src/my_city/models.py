@@ -7,6 +7,9 @@ class CityNews(models.Model):
     text_kaz = models.TextField(verbose_name='текст(kaz)')
     text_rus = models.TextField(verbose_name='текст(rus)')
     created_date = models.DateTimeField(auto_now_add=True)
+    video_url = models.URLField(max_length=150, verbose_name='видео', null=True, blank=True)
+    video_screenshot = models.ImageField(upload_to='my_city_video_screens', verbose_name='скриншот видео',
+                                         null=True, blank=True)
 
     def __str__(self):
         return self.title_rus
@@ -24,13 +27,3 @@ class CityImage(models.Model):
     class Meta:
         verbose_name_plural = 'изображения'
         verbose_name = 'изображение'
-
-
-class CityVideo(models.Model):
-    url = models.URLField(max_length=150, verbose_name='видео')
-    news = models.ForeignKey(CityNews, related_name='videos', null=True,
-                             verbose_name='видео', on_delete=models.SET_NULL)
-
-    class Meta:
-        verbose_name_plural = 'видео'
-        verbose_name = 'видео'
