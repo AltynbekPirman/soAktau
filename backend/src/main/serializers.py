@@ -81,11 +81,16 @@ class ChatSerializer(serializers.ModelSerializer):
         model = Address
         fields = ('kaz', 'rus')
 
+    def get_thumbnail_url(self, obj):
+        return self.context['request'].build_absolute_uri(obj.icon.url)
+
     def group_by_lang_kaz(self, obj):
-        return {'id': obj.id, 'title': obj.title_kaz, 'messages': self.get_kaz_messages(obj)}
+        return {'id': obj.id, 'title': obj.title_kaz, 'icon': self.get_thumbnail_url(obj),
+                'messages': self.get_kaz_messages(obj)}
 
     def group_by_lang_rus(self, obj):
-        return {'id': obj.id, 'title': obj.title_rus, 'messages': self.get_rus_messages(obj)}
+        return {'id': obj.id, 'title': obj.title_rus, 'icon': self.get_thumbnail_url(obj),
+                'messages': self.get_rus_messages(obj)}
 
     @staticmethod
     def get_kaz_messages(obj):

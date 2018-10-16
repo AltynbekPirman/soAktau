@@ -114,6 +114,7 @@ class Phone(models.Model):
 class ChatRoom(models.Model):
     title_rus = models.CharField(max_length=512, verbose_name='Название чата(kaz)')
     title_kaz = models.CharField(max_length=512, verbose_name='Название чата(rus)')
+    icon = models.ImageField(upload_to='chat_icons')
 
     def __str__(self):
         return self.title_rus
