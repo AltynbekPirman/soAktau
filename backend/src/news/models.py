@@ -7,6 +7,7 @@ class News(models.Model):
     title_rus = models.TextField(verbose_name='название(rus)')
     text_kaz = models.TextField(verbose_name='текст(kaz)')
     text_rus = models.TextField(verbose_name='текст(rus)')
+    is_main = models.BooleanField(default=False, verbose_name='на главную')
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

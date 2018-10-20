@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import User, Group
+from django_summernote.admin import SummernoteModelAdmin
 
 from main.models import Phone, Address, CompanyInfo, Coordinate, ChatRoom, ChatMessage, Bus, Mail, AddressInfo
 
@@ -10,7 +11,9 @@ admin.site.site_title = 'Aktau'
 admin.site.index_title = 'Страница администратора'
 admin.site.disable_action('delete_selected')
 
-admin.site.register(CompanyInfo)
+
+class InfoAdmin(SummernoteModelAdmin):
+    summernote_fields = ('info_kaz', 'info_rus')
 
 
 class PhoneInline(admin.StackedInline):
@@ -51,5 +54,6 @@ class ChatRoomAdmin(admin.ModelAdmin):
     inlines = [ChatMessageInline, ]
 
 
+admin.site.register(CompanyInfo, InfoAdmin)
 admin.site.register(Address, AddressAdmin)
 admin.site.register(ChatRoom, ChatRoomAdmin)

@@ -29,6 +29,8 @@ class NewsViewSet(GenericViewSet, ListModelMixin, ):
     queryset = News.objects.all()
     serializer_class = NewsSerializer
     ordering = ('-created_date', )
+    filter_backends = (filters.DjangoFilterBackend, )
+    filterset_fields = ('is_main', )
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())

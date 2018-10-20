@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django import forms
+from django_summernote.admin import SummernoteModelAdmin
 
 from my_city.models import CityImage, CityNews
 
@@ -42,9 +43,10 @@ class MyCityForm(forms.ModelForm):
         fields = '__all__'
 
 
-class MyCityAdmin(admin.ModelAdmin):
+class MyCityAdmin(SummernoteModelAdmin):
     form = MyCityForm
     inlines = [ImageInline, ]
+    summernote_fields = ('text_kaz', 'text_rus')
 
 
 admin.site.register(CityNews, MyCityAdmin)
