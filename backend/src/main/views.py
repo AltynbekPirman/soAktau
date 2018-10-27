@@ -10,9 +10,9 @@ from main.serializers import CompanyInfoSerializer, AddressSerializer, ChatSeria
 class CompanyInfoViewSet(GenericViewSet, ListModelMixin):
     queryset = CompanyInfo.objects.all()
 
-    def list(self, requset, *args, **kwargs):
+    def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        news = CompanyInfoSerializer(queryset, many=True, )
+        news = CompanyInfoSerializer(queryset, many=True)
         kaz = [d['kaz'] for d in news.data]
         rus = [d['rus'] for d in news.data]
         return Response({'kaz': kaz, 'rus': rus})

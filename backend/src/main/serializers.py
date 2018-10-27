@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from main.accessories import ImageLinker
 from main.models import CompanyInfo, Address
 
 
@@ -13,11 +14,11 @@ class CompanyInfoSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def group_by_lang_kaz(obj):
-        return {'id': obj.id, 'text': obj.info_kaz}
+        return {'id': obj.id, 'text': ImageLinker(obj.info_kaz).link_images()}
 
     @staticmethod
     def group_by_lang_rus(obj):
-        return {'id': obj.id, 'text': obj.info_rus}
+        return {'id': obj.id, 'text': ImageLinker(obj.info_rus).link_images()}
 
 
 class AddressSerializer(serializers.ModelSerializer):

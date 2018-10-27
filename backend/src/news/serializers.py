@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from main.accessories import ImageLinker
 from news.models import News, Announcement, Question
 
 
@@ -16,13 +17,13 @@ class NewsSerializer(serializers.ModelSerializer):
 
     def group_by_lang_kaz(self, obj):
         return {
-            'id': obj.id, 'title': obj.title_kaz, 'text': obj.text_kaz,
+            'id': obj.id, 'title': obj.title_kaz, 'text': ImageLinker(obj.text_kaz).link_images(),
             'icon': self.get_thumbnail_url(obj), 'createdAt': obj.created_date, 'isMain': obj.is_main
         }
 
     def group_by_lang_rus(self, obj):
         return {
-            'id': obj.id, 'title': obj.title_rus, 'text': obj.text_rus,
+            'id': obj.id, 'title': ImageLinker(obj.title_rus).link_images(), 'text': obj.text_rus,
             'icon': self.get_thumbnail_url(obj), 'createdAt': obj.created_date, 'isMain': obj.is_main
         }
 

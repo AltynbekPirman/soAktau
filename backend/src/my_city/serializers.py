@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from main.accessories import ImageLinker
 from my_city.models import CityNews
 
 
@@ -26,12 +27,12 @@ class CityNewsSerializer(serializers.ModelSerializer):
 
     def group_by_lang_kaz(self, obj):
         return {
-            'id': obj.id, 'title': obj.title_kaz, 'body': obj.text_kaz, 'createdAt': obj.created_date,
+            'id': obj.id, 'title': obj.title_kaz, 'body': ImageLinker(obj.text_kaz).link_images(), 'createdAt': obj.created_date,
             'imageUrls': self.get_image_urls(obj), 'video': obj.video_url, 'image': self.get_screen_url(obj)
         }
 
     def group_by_lang_rus(self, obj):
         return {
-            'id': obj.id, 'title': obj.title_rus, 'body': obj.text_rus, 'createdAt': obj.created_date,
+            'id': obj.id, 'title': ImageLinker(obj.title_rus).link_images(), 'body': obj.text_rus, 'createdAt': obj.created_date,
             'imageUrls': self.get_image_urls(obj), 'video': obj.video_url, 'image': self.get_screen_url(obj)
         }
