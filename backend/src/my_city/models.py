@@ -14,17 +14,31 @@ class CityNews(models.Model):
     view_count = models.IntegerField(default=0)
     thumbnail = models.ImageField(upload_to='my_city_thumbnails', null=True, blank=True)
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        super().save()
-        if self.images.all():
-            thumbnail_file = self._get_thumbnail(self.images.all()[0].icon.url)
-            thumbnail_file.save('backend/src/mediamy_city_thumbnails/thumbnail_{}.png'.format(self.id), "PNG")
-            self.thumbnail = 'my_city_thumbnails/thumbnail_{}.png'.format(self.id)
-        elif self.video_screenshot:
-            thumbnail_file = self._get_thumbnail(self.video_screenshot.url)
-            thumbnail_file.save('backend/src/media/my_city_thumbnails/thumbnail_{}.png'.format(self.id), "PNG")
-            self.thumbnail = 'my_city_thumbnails/thumbnail_{}.png'.format(self.id)
-        super().save()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.disable_signals = False
+
+    def save_without_signals(self):
+        """
+        This allows for updating the model from code running inside post_save()
+        signals without going into an infinite loop:
+        """
+        self.disable_signals = True
+        self.save()
+        self.disable_signals = False
+
+
+    # def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+    #     super().save()
+    #     if self.images.all():
+    #         thumbnail_file = self._get_thumbnail(self.images.all()[0].icon.url)
+    #         thumbnail_file.save('backend/src/mediamy_city_thumbnails/thumbnail_{}.png'.format(self.id), "PNG")
+    #         self.thumbnail = 'my_city_thumbnails/thumbnail_{}.png'.format(self.id)
+    #     elif self.video_screenshot:
+    #         thumbnail_file = self._get_thumbnail(self.video_screenshot.url)
+    #         thumbnail_file.save('backend/src/media/my_city_thumbnails/thumbnail_{}.png'.format(self.id), "PNG")
+    #         self.thumbnail = 'my_city_thumbnails/thumbnail_{}.png'.format(self.id)
+    #     super().save()
 
     @staticmethod
     def _get_thumbnail(image_location):

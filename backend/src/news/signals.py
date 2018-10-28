@@ -1,6 +1,8 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from news.models import Announcement
+
+from main.accessories import ThumbnailCreator
+from news.models import Announcement, News
 from pusher_push_notifications import PushNotifications
 import news.pusher_data as pusher_data
 
@@ -24,3 +26,21 @@ def notify_announcement(sender, instance: Announcement, **kwargs):
             publish_body={'apns': {'aps': {'alert': instance.title_rus, "badge": 9, "sound": "bingbong.aiff"}},
                           'fcm': {'notification': {'title': instance.title_rus, 'body': instance.text_rus}}}
         )
+
+
+@receiver(post_save, sender=Announcement)
+def save_thumbnail_announcement(sender, instance: Announcement, **kwargs):
+    if not instance.disable_signals:
+        thumbnail_file = ThumbnailCreator.get_thumbnail(instance.icon.name)
+        thumbnail_file.save('./media/announcement_thumbnails/thumbnail_{}.png'.format(instance.id), "PNG")
+        instance.thumbnail = 'announcement_thumbnails/thumbnail_{}.png'.format(instance.id)
+        instance.save_without_signals()
+
+
+@receiver(post_save, sender=News)
+def save_thumbnail_news(sender, instance: News, **kwargs):
+    if not instance.disable_signals:
+        thumbnail_file = ThumbnailCreator.get_thumbnail(instance.icon.name)
+        thumbnail_file.save('./media/news_thumbnails/thumbnail_{}.png'.format(instance.id), "PNG")
+        instance.thumbnail = 'news_thumbnails/thumbnail_{}.png'.format(instance.id)
+        instance.save_without_signals()

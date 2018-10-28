@@ -1,5 +1,7 @@
 import re
 
+from PIL import Image
+
 
 class PhoneLinker:
 
@@ -70,6 +72,17 @@ class ImageLinker:
 
     def _find_images(self) -> tuple:
         return tuple(self.regex.finditer(self.text))
+
+
+class ThumbnailCreator:
+
+    @classmethod
+    def get_thumbnail(cls, image_location):
+        print(image_location)
+        image = Image.open('./backend/src/media/{}'.format(image_location))
+        thumbnail = image.resize([60, 60], Image.ANTIALIAS)
+        image.close()
+        return thumbnail
 
 
 if __name__ == '__main__':

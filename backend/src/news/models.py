@@ -2,12 +2,6 @@ from PIL import Image
 from django.db import models
 
 
-def get_thumbnail(image_location):
-    image = Image.open('./backend/src{}'.format(image_location))
-    thumbnail = image.resize([60, 60], Image.ANTIALIAS)
-    return thumbnail
-
-
 class News(models.Model):
     icon = models.ImageField(upload_to='news_images')
     title_kaz = models.TextField(verbose_name='название(kaz)')
@@ -19,12 +13,26 @@ class News(models.Model):
     view_count = models.IntegerField(default=0)
     thumbnail = models.ImageField(upload_to='news_thumbnails', null=True, blank=True)
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        super().save()
-        thumbnail_file = get_thumbnail(self.icon.url)
-        thumbnail_file.save('backend/src/media/news_thumbnails/thumbnail_{}.png'.format(self.id), "PNG")
-        self.thumbnail = 'news_thumbnails/thumbnail_{}.png'.format(self.id)
-        super().save()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.disable_signals = False
+
+    def save_without_signals(self):
+        """
+        This allows for updating the model from code running inside post_save()
+        signals without going into an infinite loop:
+        """
+        self.disable_signals = True
+        self.save()
+        self.disable_signals = False
+
+    #
+    # def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+    #     super().save()
+    #     thumbnail_file = get_thumbnail(self.icon.url)
+    #     thumbnail_file.save('backend/src/media/news_thumbnails/thumbnail_{}.png'.format(self.id), "PNG")
+    #     self.thumbnail = 'news_thumbnails/thumbnail_{}.png'.format(self.id)
+    #     super().save()
 
     def __str__(self):
         return self.title_rus
@@ -43,12 +51,25 @@ class Announcement(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     thumbnail = models.ImageField(upload_to='announcement_thumbnails', null=True, blank=True)
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        super().save()
-        thumbnail_file = get_thumbnail(self.icon.url)
-        thumbnail_file.save('backend/src/media/announcement_thumbnails/thumbnail_{}.png'.format(self.id), "PNG")
-        self.thumbnail = 'announcement_thumbnails/thumbnail_{}.png'.format(self.id)
-        super().save()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.disable_signals = False
+
+    def save_without_signals(self):
+        """
+        This allows for updating the model from code running inside post_save()
+        signals without going into an infinite loop:
+        """
+        self.disable_signals = True
+        self.save()
+        self.disable_signals = False
+
+    # def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+    #     super().save()
+    #     thumbnail_file = get_thumbnail(self.icon.url)
+    #     thumbnail_file.save('backend/src/media/announcement_thumbnails/thumbnail_{}.png'.format(self.id), "PNG")
+    #     self.thumbnail = 'announcement_thumbnails/thumbnail_{}.png'.format(self.id)
+    #     super().save()
 
     def __str__(self):
         return self.title_rus
