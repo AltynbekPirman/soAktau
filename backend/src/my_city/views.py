@@ -1,5 +1,7 @@
 from django.shortcuts import get_object_or_404
-from rest_framework.mixins import ListModelMixin
+from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
+from rest_framework.mixins import ListModelMixin, CreateModelMixin
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
@@ -11,6 +13,15 @@ class CityNewsViewSet(GenericViewSet, ListModelMixin, ):
     queryset = CityNews.objects.all()
     serializer_class = CityNewsSerializer
     ordering = ('-created_date', )
+
+    def initial(self, request, *args, **kwargs):
+        super().initial(request, *args, **kwargs)
+        if request.method == 'POST':
+            self.city_news_id = request.data.get('id')
+            try:
+                self.city_news = CityNews.objects.get(id=self.city_news_id)
+            except CityNews.DoesNotExist:
+                raise ValidationError('api_error: Cannot find object with id {}'.format(self.city_news_id))
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
@@ -24,3 +35,11 @@ class CityNewsViewSet(GenericViewSet, ListModelMixin, ):
         news = get_object_or_404(queryset, pk=pk)
         serializer = CityNewsSerializer(news, context={'request': request})
         return Response(serializer.data)
+
+    @action(detail=False, methods=['post'])
+    def counter(self, request, *args, **kwargs):
+        if self.city_news:
+            self.city_news.view_count += 1
+            self.city_news.save(update_fields=['view_count'])
+            return Response(status=200, data={'count': self.city_news.view_count})
+        return Response(status=400, data={'id error': self.city_news_id})

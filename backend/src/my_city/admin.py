@@ -19,10 +19,10 @@ class MyCityForm(forms.ModelForm):
                 if self.cleaned_data.get('video_url') or self.cleaned_data.get('video_screenshot'):
                     raise forms.ValidationError("Невозможно добавить видео и изображение")
             if self.cleaned_data.get('video_url') or self.cleaned_data.get('video_screenshot'):
-                if len(self.files) > 1 or 'video_screenshot' not in self.files:
-                    raise forms.ValidationError("Невозможно добавить видео и изображение или видео без скриншота")
-                elif self.cleaned_data.get('video_url') and self.cleaned_data.get('video_screenshot'):
+                if self.cleaned_data.get('video_url') and self.cleaned_data.get('video_screenshot'):
                     return self.cleaned_data
+                elif len(self.files) > 1 or 'video_screenshot' not in self.files:
+                    raise forms.ValidationError("Невозможно добавить видео и изображение или видео без скриншота")
                 else:
                     raise forms.ValidationError("Видео необходимо добавить вместе со скриншотом")
             return self.cleaned_data
@@ -40,7 +40,7 @@ class MyCityForm(forms.ModelForm):
 
     class Meta:
         model = CityNews
-        fields = '__all__'
+        fields = ('title_kaz', 'title_rus', 'text_kaz', 'text_rus', 'video_url', 'video_screenshot')
 
 
 class MyCityAdmin(SummernoteModelAdmin):

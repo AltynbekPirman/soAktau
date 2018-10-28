@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from main.accessories import ImageLinker
+from main.accessories import ImageLinker, PhoneLinker
 from services.models import Service, Post, SubService, Title, CalcParameter, CalcQuestion
 
 
@@ -14,11 +14,13 @@ class PostTextSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def group_by_lang_kaz(obj):
-        return {'text': ImageLinker(obj.text_kaz).link_images()}
+        text = ImageLinker(obj.text_kaz).link_images()
+        return {'text': PhoneLinker(text).href_phones()}
 
     @staticmethod
     def group_by_lang_rus(obj):
-        return {'text': ImageLinker(obj.text_rus).link_images()}
+        text = ImageLinker(obj.text_rus).link_images()
+        return {'text': PhoneLinker(text).href_phones()}
 
 
 class ServiceSerializer(serializers.ModelSerializer):

@@ -1,4 +1,6 @@
 from django.shortcuts import render, get_object_or_404
+from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
 from rest_framework.mixins import ListModelMixin, CreateModelMixin
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -32,6 +34,15 @@ class NewsViewSet(GenericViewSet, ListModelMixin, ):
     filter_backends = (filters.DjangoFilterBackend, )
     filterset_fields = ('is_main', )
 
+    def initial(self, request, *args, **kwargs):
+        super().initial(request, *args, **kwargs)
+        if request.method == 'POST':
+            self.news_id = request.data.get('id')
+            try:
+                self.news = News.objects.get(id=self.news_id)
+            except News.DoesNotExist:
+                raise ValidationError('api_error: Cannot find object with id {}'.format(self.news_id))
+
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         news = NewsSerializer(queryset, many=True, context={'request': request})
@@ -44,6 +55,14 @@ class NewsViewSet(GenericViewSet, ListModelMixin, ):
         news = get_object_or_404(queryset, pk=pk)
         serializer = NewsSerializer(news, context={'request': request})
         return Response(serializer.data)
+
+    @action(detail=False, methods=['post'])
+    def counter(self, request, *args, **kwargs):
+        if self.news:
+            self.news.view_count += 1
+            self.news.save(update_fields=['view_count'])
+            return Response(status=200, data={'count': self.news.view_count})
+        return Response(status=400, data={'id error': self.news_id})
 
 
 class AnnouncementViewSet(GenericViewSet, ListModelMixin, ):

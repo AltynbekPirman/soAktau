@@ -8,7 +8,15 @@ class TextAdmin(SummernoteModelAdmin):
     summernote_fields = ('text_kaz', 'text_rus')
 
 
-admin.site.register(Question)
-admin.site.register(News, TextAdmin)
+class NewsAdmin(SummernoteModelAdmin):
+    summernote_fields = ('text_kaz', 'text_rus')
+    exclude = ('view_count', 'thumbnail')
 
-admin.site.register(Announcement)
+
+class AnnouncementAdmin(admin.ModelAdmin):
+    exclude = ('view_count', 'thumbnail')
+
+
+admin.site.register(Question)
+admin.site.register(News, NewsAdmin)
+admin.site.register(Announcement, AnnouncementAdmin)

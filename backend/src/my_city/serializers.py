@@ -25,14 +25,21 @@ class CityNewsSerializer(serializers.ModelSerializer):
         elif video_screen:
             return self.context['request'].build_absolute_uri(video_screen.url)
 
+    def get_thumbnail_url(self, obj):
+        if obj.thumbnail:
+            return self.context['request'].build_absolute_uri(obj.thumbnail.url)
+        return None
+
     def group_by_lang_kaz(self, obj):
         return {
-            'id': obj.id, 'title': obj.title_kaz, 'body': ImageLinker(obj.text_kaz).link_images(), 'createdAt': obj.created_date,
-            'imageUrls': self.get_image_urls(obj), 'video': obj.video_url, 'image': self.get_screen_url(obj)
+            'id': obj.id, 'title': obj.title_kaz, 'body': ImageLinker(obj.text_kaz).link_images(),
+            'createdAt': obj.created_date, 'imageUrls': self.get_image_urls(obj), 'video': obj.video_url,
+            'image': self.get_screen_url(obj), 'viewCount': obj.view_count, 'thumbnail': self.get_thumbnail_url(obj)
         }
 
     def group_by_lang_rus(self, obj):
         return {
-            'id': obj.id, 'title': ImageLinker(obj.title_rus).link_images(), 'body': obj.text_rus, 'createdAt': obj.created_date,
-            'imageUrls': self.get_image_urls(obj), 'video': obj.video_url, 'image': self.get_screen_url(obj)
+            'id': obj.id, 'title': ImageLinker(obj.title_rus).link_images(), 'body': obj.text_rus,
+            'createdAt': obj.created_date, 'imageUrls': self.get_image_urls(obj), 'video': obj.video_url,
+            'image': self.get_screen_url(obj), 'viewCount': obj.view_count, 'thumbnail': self.get_thumbnail_url(obj)
         }
