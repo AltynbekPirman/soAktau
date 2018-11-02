@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from main.accessories import ImageLinker
-from main.models import CompanyInfo, Address
+from main.models import CompanyInfo, Address, TaxiQuestion
 
 
 class CompanyInfoSerializer(serializers.ModelSerializer):
@@ -102,3 +102,46 @@ class ChatSerializer(serializers.ModelSerializer):
     def get_rus_messages(obj):
         messages = obj.messages.all()
         return [{'_id': message.id, 'text': message.message_rus} for message in messages]
+
+
+class TaxiInfoSerializer(serializers.ModelSerializer):
+    kaz = serializers.SerializerMethodField('group_by_lang_kaz')
+    rus = serializers.SerializerMethodField('group_by_lang_rus')
+
+    class Meta:
+        model = Address
+        fields = ('kaz', 'rus')
+
+    def get_thumbnail_url(self, obj):
+        return self.context['request'].build_absolute_uri(obj.icon.url)
+
+    @staticmethod
+    def get_phones(obj):
+        phones = obj.phones.all()
+        return [phone.telephone for phone in phones]
+
+    def group_by_lang_kaz(self, obj):
+        return {'id': obj.id, 'text': obj.text_kaz, 'icon': self.get_thumbnail_url(obj),
+                'title': obj.title_kaz, 'tels': self.get_phones(obj)}
+
+    def group_by_lang_rus(self, obj):
+        return {'id': obj.id, 'text': obj.text_rus, 'icon': self.get_thumbnail_url(obj),
+                'title': obj.title_rus, 'tels': self.get_phones(obj)}
+
+
+class TaxiQuestionSerializer(serializers.ModelSerializer):
+
+    kaz = serializers.SerializerMethodField('group_by_lang_kaz')
+    rus = serializers.SerializerMethodField('group_by_lang_rus')
+
+    class Meta:
+        model = TaxiQuestion
+        fields = ('kaz', 'rus')
+
+    @staticmethod
+    def group_by_lang_kaz(obj):
+        return {'id': obj.id, 'question': obj.question_kaz, 'answer': obj.answer_kaz}
+
+    @staticmethod
+    def group_by_lang_rus(obj):
+        return {'id': obj.id, 'question': obj.question_rus, 'answer': obj.answer_rus}

@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.contrib.auth.models import User, Group
 from django_summernote.admin import SummernoteModelAdmin
 
-from main.models import Phone, Address, CompanyInfo, Coordinate, ChatRoom, ChatMessage, Bus, Mail, AddressInfo
+from main.models import Phone, Address, CompanyInfo, Coordinate, ChatRoom, ChatMessage, Bus, Mail, AddressInfo, \
+    TaxiQuestion, TaxiInfo, PhoneTaxi
 
 admin.site.unregister((User, Group))
 
@@ -50,6 +51,15 @@ class AddressAdmin(admin.ModelAdmin):
     inlines = [AddressInfoInline, MailInline, PhoneInline, CoordinateInline, BusInline]
 
 
+class PhoneTaxiInline(admin.StackedInline):
+    model = PhoneTaxi
+    extra = 1
+
+
+class TaxiAdmin(admin.ModelAdmin):
+    inlines = [PhoneTaxiInline, ]
+
+
 class ChatRoomAdmin(admin.ModelAdmin):
     inlines = [ChatMessageInline, ]
 
@@ -57,3 +67,5 @@ class ChatRoomAdmin(admin.ModelAdmin):
 admin.site.register(CompanyInfo, InfoAdmin)
 admin.site.register(Address, AddressAdmin)
 admin.site.register(ChatRoom, ChatRoomAdmin)
+admin.site.register(TaxiQuestion)
+admin.site.register(TaxiInfo, TaxiAdmin)

@@ -128,3 +128,44 @@ class ChatMessage(models.Model):
     room = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name='messages')
     message_kaz = models.TextField()
     message_rus = models.TextField()
+
+
+class TaxiInfo(models.Model):
+    title_kaz = models.TextField()
+    title_rus = models.TextField()
+    text_kaz = models.TextField(null=True)
+    text_rus = models.TextField(null=True)
+    icon = models.ImageField(upload_to='taxi_icon')
+
+    def __str__(self):
+        return self.title_rus
+
+    class Meta:
+        verbose_name = 'Такси'
+        verbose_name_plural = 'Такси'
+
+
+class TaxiQuestion(models.Model):
+    question_kaz = models.TextField(verbose_name='вопрос(kaz)')
+    question_rus = models.TextField(verbose_name='вопрос(rus)')
+    answer_kaz = models.TextField(verbose_name='ответ(kaz)')
+    answer_rus = models.TextField(verbose_name='ответ(rus)')
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.question_rus
+
+    class Meta:
+        verbose_name = 'Такси(Вопрос)'
+        verbose_name_plural = 'Такси(Вопросы)'
+
+
+class PhoneTaxi(models.Model):
+    telephone = models.CharField(max_length=64, verbose_name='телефон')
+    telephone_title_rus = models.CharField(max_length=264, verbose_name='название такси(rus)')
+    telephone_title_kaz = models.CharField(max_length=264, verbose_name='название такси(kaz)')
+    taxi = models.ForeignKey(TaxiInfo, related_name='phones', null=True,
+                             verbose_name='такси', on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return self.telephone
