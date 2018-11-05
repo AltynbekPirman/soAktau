@@ -15,6 +15,7 @@ class NewsAdmin(SummernoteModelAdmin):
 
 class AnnouncementAdmin(admin.ModelAdmin):
     exclude = ('view_count', 'thumbnail')
+    actions = ['delete_selected']
 
 
 admin.site.register(Question)
