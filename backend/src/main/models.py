@@ -145,6 +145,16 @@ class TaxiInfo(models.Model):
         verbose_name_plural = 'Такси'
 
 
+class TaxiImage(models.Model):
+    icon = models.ImageField(upload_to='taxi_images', verbose_name='изображение')
+    taxi = models.ForeignKey(TaxiInfo, related_name='images', null=True,
+                             verbose_name='изображение', on_delete=models.SET_NULL)
+
+    class Meta:
+        verbose_name_plural = 'изображения'
+        verbose_name = 'изображение'
+
+
 class TaxiQuestion(models.Model):
     question_kaz = models.TextField(verbose_name='вопрос(kaz)')
     question_rus = models.TextField(verbose_name='вопрос(rus)')

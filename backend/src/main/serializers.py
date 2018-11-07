@@ -115,6 +115,10 @@ class TaxiInfoSerializer(serializers.ModelSerializer):
     def get_thumbnail_url(self, obj):
         return self.context['request'].build_absolute_uri(obj.icon.url)
 
+    def get_image_urls(self, obj):
+        images = obj.images.all()
+        return [self.context['request'].build_absolute_uri(image.icon.url) for image in images]
+
     @staticmethod
     def get_phones(obj):
         phones = obj.phones.all()
@@ -122,11 +126,11 @@ class TaxiInfoSerializer(serializers.ModelSerializer):
 
     def group_by_lang_kaz(self, obj):
         return {'id': obj.id, 'text': obj.text_kaz, 'icon': self.get_thumbnail_url(obj),
-                'title': obj.title_kaz, 'tels': self.get_phones(obj)}
+                'title': obj.title_kaz, 'tels': self.get_phones(obj), 'imageUrls': self.get_image_urls(obj)}
 
     def group_by_lang_rus(self, obj):
         return {'id': obj.id, 'text': obj.text_rus, 'icon': self.get_thumbnail_url(obj),
-                'title': obj.title_rus, 'tels': self.get_phones(obj)}
+                'title': obj.title_rus, 'tels': self.get_phones(obj), 'imageUrls': self.get_image_urls(obj)}
 
 
 class TaxiQuestionSerializer(serializers.ModelSerializer):

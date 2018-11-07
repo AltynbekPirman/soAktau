@@ -3,7 +3,7 @@ from django.contrib.auth.models import User, Group
 from django_summernote.admin import SummernoteModelAdmin
 
 from main.models import Phone, Address, CompanyInfo, Coordinate, ChatRoom, ChatMessage, Bus, Mail, AddressInfo, \
-    TaxiQuestion, TaxiInfo, PhoneTaxi
+    TaxiQuestion, TaxiInfo, PhoneTaxi, TaxiImage
 
 admin.site.unregister((User, Group))
 
@@ -56,8 +56,13 @@ class PhoneTaxiInline(admin.StackedInline):
     extra = 1
 
 
+class ImageInline(admin.StackedInline):
+    model = TaxiImage
+    extra = 1
+
+
 class TaxiAdmin(admin.ModelAdmin):
-    inlines = [PhoneTaxiInline, ]
+    inlines = [PhoneTaxiInline, ImageInline]
 
 
 class ChatRoomAdmin(admin.ModelAdmin):
