@@ -58,7 +58,13 @@ class ServiceAdmin(admin.ModelAdmin):
     }
 
 
+class CalcParatmeterAdmin(admin.ModelAdmin):
+    readonly_fields = ('name', )
+
+
 admin.site.register(Title, TitleAdmin)
 admin.site.register(SubService, SubServiceAdmin)
 admin.site.register(Service, ServiceAdmin)
-admin.site.register((CalcParameter, CalcQuestion))
+admin.site.register(CalcQuestion)
+admin.site.register(CalcParameter, CalcParatmeterAdmin)
+
