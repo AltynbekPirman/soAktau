@@ -12,13 +12,14 @@ class CompanyInfoSerializer(serializers.ModelSerializer):
         model = CompanyInfo
         fields = ('kaz', 'rus')
 
-    @staticmethod
-    def group_by_lang_kaz(obj):
-        return {'id': obj.id, 'text': ImageLinker(obj.info_kaz).link_images()}
+    def get_thumbnail_url(self, obj):
+        return self.context['request'].build_absolute_uri(obj.icon.url)
 
-    @staticmethod
-    def group_by_lang_rus(obj):
-        return {'id': obj.id, 'text': ImageLinker(obj.info_rus).link_images()}
+    def group_by_lang_kaz(self, obj):
+        return {'id': obj.id, 'text': ImageLinker(obj.info_kaz).link_images(), 'icon': self.get_thumbnail_url(obj)}
+
+    def group_by_lang_rus(self, obj):
+        return {'id': obj.id, 'text': ImageLinker(obj.info_rus).link_images(), 'icon': self.get_thumbnail_url(obj)}
 
 
 class AddressSerializer(serializers.ModelSerializer):

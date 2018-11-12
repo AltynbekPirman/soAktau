@@ -14,7 +14,7 @@ class CompanyInfoViewSet(GenericViewSet, ListModelMixin):
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        news = CompanyInfoSerializer(queryset, many=True)
+        news = CompanyInfoSerializer(queryset, many=True, context={'request': request})
         kaz = [d['kaz'] for d in news.data]
         rus = [d['rus'] for d in news.data]
         return Response({'kaz': kaz, 'rus': rus})

@@ -12,6 +12,7 @@ class Language(models.Model):
 class CompanyInfo(models.Model):
     info_kaz = models.TextField()
     info_rus = models.TextField()
+    icon = models.ImageField(upload_to='about')
 
     def __str__(self):
         return self.info_rus
