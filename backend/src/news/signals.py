@@ -17,14 +17,14 @@ def notify_announcement(sender, instance: Announcement, **kwargs):
     if kwargs['created']:
         response = pn_client.publish(
             interests=[pusher_data.Interest_kaz],
-            publish_body={'apns': {'aps': {'alert': instance.title_kaz, "badge": 9, "sound": "bingbong.aiff"}},
+            publish_body={'apns': {'aps': {'alert': instance.title_kaz, "sound": "bingbong.aiff"}},
                           'fcm': {'notification': {'title': instance.title_kaz, 'body': instance.text_kaz,
                                                    "sound": "default"}}}
         )
 
         response = pn_client.publish(
             interests=[pusher_data.Interest_rus],
-            publish_body={'apns': {'aps': {'alert': instance.title_rus, "badge": 9, "sound": "bingbong.aiff"}},
+            publish_body={'apns': {'aps': {'alert': instance.title_rus, "sound": "bingbong.aiff"}},
                           'fcm': {'notification': {'title': instance.title_rus, 'body': instance.text_rus,
                                                    "sound": "default"}}}
         )
